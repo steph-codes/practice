@@ -1,0 +1,104 @@
+<?php
+    if($_POST){
+        if(empty($_POST['password']) || $_POST['password']!=$_POST['password2']){
+            $error_msg="You have either not entered a password or your password does not match your confirm password";
+        }
+
+        if(empty($error_msg)){
+            include('user.php');
+            $user_obj=new User();
+           
+            // $new_user=$user_obj->register($_POST['name'],$_POST['email'],$_POST['phone'],$_POST['password'],$_POST['state_id'],$_POST['gender']);
+
+            $new_user=$user_obj->my_register($_POST);
+
+            if($new_user['status'] == false)
+            {
+                $error_msg=$new_user['msg'];
+            }else{
+                header("Location: login.php?msg=Successfully registered. Please login");
+            }
+        }
+    }
+
+    include('state.php');
+    $st=new State_class;
+    $states=$st->get_states();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register :: Class Project</title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class='container'>
+    <div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+   <div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Register</h5>
+    </div>
+    <div class="card-body">
+    <?php if(!empty($error_msg))
+    {
+        echo "<div class='alert alert-danger'>$error_msg</div>";
+    }?>
+    <form action="" method="post" autocomplete="off">
+    <div class="form-group">
+                <label class="control-label">Name</label>
+                <input type="text" name="name" class="form-control" placeholder="Name">
+            </div>
+            <div class="form-group">
+            <label class="control-label">Email</label>
+                <input type="text" name="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+            <label class="control-label">Phone</label>
+            <input type="text" name="phone" class="form-control" placeholder="Phone">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Gender</label><br />
+                <label><input type="radio" name="gender" value="m" id="gender-male"> Male</label><br>
+                <label>
+                <input type="radio" name="gender" value="f" id="gender-female"> Female
+                </label>
+            </div>
+            <div class="form-group">
+            <label class="control-label">State</label>
+                <select name="state_id" class="form-control">
+                    <option value="">--Select--</option>
+                    <?php 
+                        if(!empty($states))
+                        {
+                            foreach($states as $id=>$name)
+                            {
+                                echo "<option value='$id'>$name</option>";
+                            }
+                        }
+                    ?>
+                </select>
+            </div>
+            <div class="form-group">
+            <label class="control-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+            <label class="control-label">Confirm Password</label>
+            <input type="password" name="password2" class="form-control" placeholder="Re-enter your password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success">Register</button>
+            </div>
+        </form>
+        <h5>Already registered? <a href="login.php" class="btn btn-outline-dark">Login</a></h5>
+    </div>
+   </div>        
+    </div>
+    </div>
+    </div>
+</body>
+</html>

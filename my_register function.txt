@@ -1,0 +1,25 @@
+.function my_register($details){
+        $name=$details['name'];
+        $email=$details['email'];
+        $phone=$details['phone'];
+        $password=$details['password'];
+        $state_id=$details['state_id'];
+        $gender=$details['gender'];
+
+        $query="insert into users set name='$name',email='$email',phone='$phone',password='$password', state_id='$state_id',gender='$gender'";
+
+        $this->conn->query($query);
+        if($this->conn->error){
+            $result['msg']="System error! Query error. Please contact web admin";
+            $result['status']=false;
+            return $result;
+        }
+        
+        $user_id=$this->conn->insert_id;
+        if($user_id > 0)
+        {
+            $result['msg']="Successfully registered";
+            $result['status']=true;
+            return $result;
+        }
+    }
